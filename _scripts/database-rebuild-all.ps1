@@ -13,7 +13,6 @@
 # .\database-rebuild-all.ps1 sql-music sqlserver docker dbo ../AppMvc
 
 # Exit immediately if any command fails
-$ErrorActionPreference = "Stop"
 
 param(
     [Parameter(Mandatory=$true)]
@@ -34,6 +33,8 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$AppSettingsFolder
 )
+$ErrorActionPreference = "Stop"
+
 
 # Resolve absolute path for AppSettingsFolder
 $AppSettingsFolder = Resolve-Path $AppSettingsFolder | Select-Object -ExpandProperty Path
