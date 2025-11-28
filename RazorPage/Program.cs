@@ -1,9 +1,11 @@
 using Configuration.Extensions;
 using DbRepos;
+using DbContext;
 using Encryption.Extensions;
 using Seido.Utilities.SeedGenerator;
 using Services;
 using Services.Interfaces;
+using DbContext.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,7 @@ builder.Services.AddScoped<SeedGenerator>();
 builder.Configuration.AddSecrets(builder.Environment);
 builder.Services.AddEncryptions(builder.Configuration);
 builder.Services.AddDatabaseConnections(builder.Configuration);
+builder.Services.AddUserBasedDbContext();
 
 builder.Services.AddScoped<AdminDbRepos>();
 builder.Services.AddScoped<FriendsDbRepos>();
