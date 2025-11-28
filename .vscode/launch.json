@@ -22,6 +22,52 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }
+        },
+        {
+            "name": "RazorPage",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-razorpage",
+            "program": "${workspaceFolder}/RazorPage/bin/Debug/net9.0/RazorPage.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/RazorPage",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "MvcPages",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-mvcpages",
+            "program": "${workspaceFolder}/MvcPages/bin/Debug/net9.0/MvcPages.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/MvcPages",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Launch All Apps",
+            "configurations": ["AppWebApi", "RazorPage", "MvcPages"]
         }
     ]
 }

@@ -37,6 +37,84 @@
                 "${workspaceFolder}/GoodFriends.slnx"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-razorpage",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/RazorPage/RazorPage.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "build-mvcpages",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/MvcPages/MvcPages.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary;ForceNoAlign"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "build"
+        },
+        {
+            "label": "run-razorpage",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "${workspaceFolder}/RazorPage/RazorPage.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "build",
+            "isBackground": true
+        },
+        {
+            "label": "run-mvcpages",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "run",
+                "--project",
+                "${workspaceFolder}/MvcPages/MvcPages.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": "build",
+            "isBackground": true
+        },
+        {
+            "label": "watch-razorpage",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/RazorPage/RazorPage.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "isBackground": true
+        },
+        {
+            "label": "watch-mvcpages",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/MvcPages/MvcPages.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "isBackground": true
         }
     ]
 }
