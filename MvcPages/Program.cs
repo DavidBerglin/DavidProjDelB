@@ -9,8 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-var app = builder.Build();
 builder.Services.AddScoped<SeedGenerator>();
 builder.Configuration.AddSecrets(builder.Environment);
 builder.Services.AddEncryptions(builder.Configuration);
@@ -28,6 +26,8 @@ builder.Services.AddScoped<IFriendsService, FriendsServiceDb>();
 builder.Services.AddScoped<IAddressesService, AddressesServiceDb>();
 builder.Services.AddScoped<IPetsService, PetsServiceDb>();
 builder.Services.AddScoped<IQuotesService, QuotesServiceDb>();
+var app = builder.Build();
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
