@@ -33,7 +33,6 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$AppSettingsFolder
 )
-$ErrorActionPreference = "Stop"
 
 
 # Resolve absolute path for AppSettingsFolder

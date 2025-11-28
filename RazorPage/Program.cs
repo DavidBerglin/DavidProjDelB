@@ -1,10 +1,30 @@
+using Configuration.Extensions;
+using DbRepos;
+using Encryption.Extensions;
 using Seido.Utilities.SeedGenerator;
+using Services;
+using Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<SeedGenerator>();
+builder.Services.AddScoped<SeedGenerator>();
+builder.Configuration.AddSecrets(builder.Environment);
+builder.Services.AddEncryptions(builder.Configuration);
+builder.Services.AddDatabaseConnections(builder.Configuration);
+
+builder.Services.AddScoped<AdminDbRepos>();
+builder.Services.AddScoped<FriendsDbRepos>();
+builder.Services.AddScoped<AddressesDbRepos>();
+builder.Services.AddScoped<PetsDbRepos>();
+builder.Services.AddScoped<QuotesDbRepos>();
+
+builder.Services.AddScoped<IAdminService, AdminServiceDb>();
+builder.Services.AddScoped<IFriendsService, FriendsServiceDb>();
+builder.Services.AddScoped<IAddressesService, AddressesServiceDb>();
+builder.Services.AddScoped<IPetsService, PetsServiceDb>();
+builder.Services.AddScoped<IQuotesService, QuotesServiceDb>();
 
 var app = builder.Build();
 
