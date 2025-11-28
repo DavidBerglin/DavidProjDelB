@@ -1,7 +1,10 @@
+using Seido.Utilities.SeedGenerator;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<SeedGenerator>();
 
 var app = builder.Build();
 
