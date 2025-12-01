@@ -9,20 +9,23 @@ namespace RazorPage.Pages.Friends;
     public class OverviewModel : PageModel
     {
         private readonly IAddressesService _addressesService;
+        private readonly IFriendsService _friendsService;
         private readonly IAdminService _adminService;
         public List<IFriend> Friends { get; set; } = new List<IFriend>();
         
         public async Task<IActionResult> OnGet()
         {
             var addresses = await _addressesService.ReadAddressesAsync(true, false, "Sweden", 0, 100); 
-            var info = await _adminService.GuestInfoAsync();
+            var friendresponse = await _friendsService.ReadFriendsAsync(true, false, "", 0, 100);
+            Friends = friendresponse.PageItems.ToList();
             return Page();
+    
         }
-     
-        public OverviewModel(IAddressesService addressesService, IAdminService adminService)
+        public OverviewModel(IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService)
         {
             _addressesService = addressesService;
             _adminService = adminService;
+            _friendsService = friendsService;
         }
      
     }
