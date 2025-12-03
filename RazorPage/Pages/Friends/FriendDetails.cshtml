@@ -1,0 +1,86 @@
+@page
+@using Models
+@using System.Diagnostics.Eventing.Reader
+@using myFirstRazorPage.Pages
+@model FriendDetails
+@{
+    ViewData["Title"] = "Friend information";
+    Layout = "_Layout";
+}
+
+
+<div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
+    <h3 class="pb-2 border-bottom">Friend information</h3>
+
+    <div class="col-md-7 col-lg-10">
+
+        <div class="row g-3">
+            <div class="col-sm-6">
+                <label for="fullname" class="form-label">Fullname</label>
+                <input type="text" class="form-control" id="fullname"
+                    value="@Model.Friend.FirstName @Model.Friend.LastName" readonly>
+            </div>
+            <div class="col-sm-6">
+                <label for="friendBirthday" class="form-label">Birthday</label>
+                <input type="text" class="form-control" id="friendBirthday"
+                    value="@(Model.Friend.Birthday != null ? Model.Friend.Birthday : "Couldnt find any birthday")"
+                    readonly>
+            </div>
+            <div class="col-sm-6">
+                <label for="friendEmail" class="form-label">Email</label>
+                <input type="text" class="form-control" id="friendEmail" value="@Model.Friend.Email" readonly>
+            </div>
+            <div class="col-sm-6">
+                <label for="friendID" class="form-label">Friend ID</label>
+                <input type="text" class="form-control" id="friendID" value="@Model.Friend.FriendId" readonly>
+            </div>
+            <h3 class="pb-2 border-bottom">Address</h3>
+
+            @if (Model.Friend.Address != null)
+            {
+                <div class="col-sm-6">
+                    <label for="friendAddress" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="friendAddress" value="@Model.Friend.Address.StreetAddress"
+                        readonly>
+                </div>
+                <div class="col-sm-6">
+                    <label for="friendAddress" class="form-label">City</label>
+                    <input type="text" class="form-control" id="friendAddress" value="@Model.Friend.Address.City" readonly>
+                </div>
+                <div class="col-sm-6">
+                    <label for="friendAddress" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="friendAddress" value="@Model.Friend.Address.Country"
+                        readonly>
+                </div>
+            }
+
+
+            @if (Model.Friend.Pets != null)
+            {
+                <h3 class="pb-2 border-bottom">Pets</h3>
+
+                @foreach (var pet in Model.Friend.Pets)
+                {
+
+                    <div class="col-sm-6">
+                        <label for="petName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="petName" value="@pet.Name" readonly>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <label for="petKind" class="form-label">Kind</label>
+                        <input type="text" class="form-control" id="petKind" value="@pet.Kind" readonly>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-sm-12">
+                    <p class="alert alert-info">This friend has no pets.</p>
+                </div>
+            }
+
+        </div>
+
+    </div>
+</div>
