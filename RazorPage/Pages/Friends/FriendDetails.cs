@@ -13,7 +13,7 @@ namespace myFirstRazorPage.Pages
         readonly IFriendsService? _service = null;
 
         //public member becomes part of the Model in the Razor page
-        public IFriend Friend { get; set; }
+        public IFriend? Friend { get; set; }
         public string ErrorMessage { get; set; } = null;
 
         //Will execute on a Get request
@@ -22,7 +22,7 @@ namespace myFirstRazorPage.Pages
             try
             {
                 Guid _id = Guid.Parse(id);
-                Friend = _service.ReadFriendAsync(_id, false).Result.Item;
+                Friend =  _service?.ReadFriendAsync(_id, false).Result.Item ?? null;
             }
             catch (Exception e)
             {

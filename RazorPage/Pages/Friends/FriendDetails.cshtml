@@ -8,7 +8,7 @@
     Layout = "_Layout";
 }
 
-
+@if (Model.Friend != null) {
 <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
     <h3 class="pb-2 border-bottom">Friend information</h3>
 
@@ -34,6 +34,7 @@
                 <label for="friendID" class="form-label">Friend ID</label>
                 <input type="text" class="form-control" id="friendID" value="@Model.Friend.FriendId" readonly>
             </div>
+            
             <h3 class="pb-2 border-bottom">Address</h3>
 
             @if (Model.Friend.Address != null)
@@ -53,6 +54,7 @@
                         readonly>
                 </div>
             }
+            
 
 
             @if (Model.Friend.Pets != null)
@@ -84,3 +86,7 @@
 
     </div>
 </div>
+}
+else {
+    <h4>FRIEND NOT FOUND </h4>
+}
