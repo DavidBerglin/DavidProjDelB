@@ -1,5 +1,5 @@
 @page
-@model RazorPage.Pages.Friends.FriendsByCountryModel
+@model RazorPage.Pages.Friends.OverviewCountryModel
 @{
 }
 @{
@@ -40,19 +40,19 @@
 
 
           <div class="container px-4 py-4" id="webapi-info">
-          <h2 class="pb-2 border-bottom">Country information</h2>
-          <p>Showing how many friends in each country. </p>
-          @if (Model.Countryinfo != null) {
-            @foreach (var info in Model.Countryinfo) 
+          <h2 class="pb-2 border-bottom">City information</h2>
+          <p>Friends in each city in the picked country. </p>
+          @if (Model.CityInfo != null) {
+            @foreach (var info in Model.CityInfo) 
             {      
                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4 py-5">
             <div class="col d-flex align-items-start">
               <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#home"/></svg>
               <div>
-                <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">@(info.Country != null ? info.Country : "Homeless" )</h3>
+                <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">@(info.City != null ? info.City : "Homeless" )</h3>
                 <p>@info.NrFriends</p>
-                <a asp-page="/Friends/OverviewCountry" asp-route-id="@info.Country" class="btn btn-primary">
-                  Show cities
+                <a asp-page="/Friends/Overview" asp-route-searchString=@info.City class="btn btn-primary">
+                  See friends
                 </a>    
               </div>
             </div>
@@ -60,7 +60,6 @@
             }
     }
     else {
-        <p>No country information available.</p>
+        <p>No city information available for this country.</p>
     }
-               
          

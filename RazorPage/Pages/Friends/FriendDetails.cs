@@ -14,7 +14,7 @@ namespace myFirstRazorPage.Pages
 
         //public member becomes part of the Model in the Razor page
         public IFriend? Friend { get; set; }
-        public string ErrorMessage { get; set; } = null;
+        public string? ErrorMessage { get; set; } = null;
 
         //Will execute on a Get request
         public IActionResult OnGet(string id)

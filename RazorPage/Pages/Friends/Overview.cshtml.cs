@@ -6,27 +6,31 @@ using Models.DTO;
 
 namespace RazorPage.Pages.Friends;
 
-    public class OverviewModel : PageModel
+public class OverviewModel : PageModel
+{
+    private readonly IAddressesService _addressesService;
+    private readonly IFriendsService _friendsService;
+    private readonly IAdminService _adminService;
+    public List<IFriend> Friends { get; set; } = new List<IFriend>();
+
+    public async Task<IActionResult> OnGet(string searchString)
     {
-        private readonly IAddressesService _addressesService;
-        private readonly IFriendsService _friendsService;
-        private readonly IAdminService _adminService;
-        public List<IFriend> Friends { get; set; } = new List<IFriend>();
-        
-        public async Task<IActionResult> OnGet()
+        var friendresponse = await _friendsService.ReadFriendsAsync(true, false, null, 0, 100);
+        if (friendresponse?.PageItems != null)
         {
-            var addresses = await _addressesService.ReadAddressesAsync(true, false, "Sweden", 0, 100); 
-            var friendresponse = await _friendsService.ReadFriendsAsync(true, false, "", 0, 100);
-            Friends = friendresponse.PageItems.ToList();
-            return Page();
-    
+            Friends = string.IsNullOrEmpty(searchString)
+                ? friendresponse.PageItems.ToList()
+                : friendresponse.PageItems.Where(f => f.Address?.City?.ToLower() == searchString.ToLower()).ToList();
         }
-        public OverviewModel(IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService)
-        {
-            _addressesService = addressesService;
-            _adminService = adminService;
-            _friendsService = friendsService;
-        }
-     
+        return Page();
+
     }
+    public OverviewModel(IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService)
+    {
+        _addressesService = addressesService;
+        _adminService = adminService;
+        _friendsService = friendsService;
+    }
+
+}
 
