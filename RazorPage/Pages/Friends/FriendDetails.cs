@@ -28,19 +28,31 @@ namespace myFirstRazorPage.Pages
             }
             return Page();
         }
-        public IActionResult OnPostDelete(Guid id)
+        public async Task<IActionResult> OnPostDelete(Guid id, Guid petId)
         {
             try
             {
-                _petsService?.DeletePetAsync(id);
-                return RedirectToPage("/Friends/Overview");
+                if (_petsService != null)
+                {
+                    await _petsService.DeletePetAsync(petId);
+                }
+                return RedirectToPage("./FriendDetails", new { id = id });
             }
+                
+            
             catch (Exception e)
             {
                 ErrorMessage = e.Message;
+                if (_service != null)
+                {
+                    var result=  await _service.ReadFriendAsync(id, false);
+                    Friend = result?.Item ?? null;
+                }
+               
                 return Page();
             }
         }
+        
 
         //Inject services just like in WebApi
         public FriendDetails(IFriendsService service, IPetsService petsService, ILogger<FriendDetails> logger)

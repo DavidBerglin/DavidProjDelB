@@ -78,9 +78,13 @@
                         <label for="petKind" class="form-label">Kind</label>
                         <input type="text" class="form-control" id="petKind" value="@pet.Kind" readonly>
                     </div>
-                      <button type="submit" class="btn btn-danger btn-sm m-1" data-seido-selected-item-id="@pet.PetId">
+                    <form method="post">
+                    <input type="hidden" name="id" value="@Model.Friend.FriendId" />
+                    <input type="hidden" name="petId" value="@pet.PetId" />
+                      <button type="submit" asp-page-handler="Delete" class="btn btn-danger btn-sm m-1">
                     Del
                 </button>
+                    </form>
                 }
             }
             else
