@@ -8,15 +8,13 @@ namespace myFirstRazorPage.Pages
     //Demonstrate how to read Query parameters
     public class FriendDetails : PageModel
     {
-        //Just like for WebApi
         readonly ILogger<FriendDetails>? _logger = null;
         readonly IFriendsService? _service = null;
+        readonly IPetsService? _petsService = null;
 
-        //public member becomes part of the Model in the Razor page
         public IFriend? Friend { get; set; }
         public string? ErrorMessage { get; set; } = null;
 
-        //Will execute on a Get request
         public IActionResult OnGet(string id)
         {
             try
@@ -30,12 +28,26 @@ namespace myFirstRazorPage.Pages
             }
             return Page();
         }
+        public IActionResult OnPostDelete(Guid id)
+        {
+            try
+            {
+                _petsService?.DeletePetAsync(id);
+                return RedirectToPage("/Friends/Overview");
+            }
+            catch (Exception e)
+            {
+                ErrorMessage = e.Message;
+                return Page();
+            }
+        }
 
         //Inject services just like in WebApi
-        public FriendDetails(IFriendsService service, ILogger<FriendDetails> logger)
+        public FriendDetails(IFriendsService service, IPetsService petsService, ILogger<FriendDetails> logger)
         {
             _logger = logger;
             _service = service;
+            _petsService = petsService;
         }
     }
 }

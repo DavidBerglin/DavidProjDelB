@@ -48,6 +48,11 @@
                     <label for="friendAddress" class="form-label">City</label>
                     <input type="text" class="form-control" id="friendAddress" value="@Model.Friend.Address.City" readonly>
                 </div>
+                 <div class="col-sm-6">
+                    <label for="friendAddress" class="form-label">Zipcode</label>
+                    <input type="text" class="form-control" id="friendAddress" value="@Model.Friend.Address.ZipCode"
+                        readonly>
+                </div>
                 <div class="col-sm-6">
                     <label for="friendAddress" class="form-label">Country</label>
                     <input type="text" class="form-control" id="friendAddress" value="@Model.Friend.Address.Country"
@@ -73,12 +78,35 @@
                         <label for="petKind" class="form-label">Kind</label>
                         <input type="text" class="form-control" id="petKind" value="@pet.Kind" readonly>
                     </div>
+                      <button type="submit" class="btn btn-danger btn-sm m-1" data-seido-selected-item-id="@pet.PetId">
+                    Del
+                </button>
                 }
             }
             else
             {
                 <div class="col-sm-12">
                     <p class="alert alert-info">This friend has no pets.</p>
+                </div>
+            }
+            @if (Model.Friend.Quotes != null)
+            {
+                <h3 class="pb-2 border-bottom">Favorite quotes</h3>
+
+                @foreach (var quote in Model.Friend.Quotes)
+                {
+
+                    <div class="col-sm-12">
+                        <label for="quoteText" class="form-label">Quote</label>
+                        <input type="text" class="form-control" id="quoteText" value="@quote.QuoteText By: @quote.Author" readonly>
+                    </div>
+                   
+                }
+            }
+            else
+            {
+                <div class="col-sm-12">
+                    <p class="alert alert-info">This friend has no quotes.</p>
                 </div>
             }
 
