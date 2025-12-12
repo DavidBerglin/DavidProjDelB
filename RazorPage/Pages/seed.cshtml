@@ -7,8 +7,8 @@
 
         <div class="container px-4 py-4" id="seed">
 
-          <p>Current the database contains 100 music groups. Reseed according to the number of items you want.
-            You may optionally remove the old data before seeding.
+          <p>Current the database contains 100 friends. Reseed according to the number of items you want.
+            Reseeding will delete the old data.
           </p>
 
           <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
@@ -17,7 +17,7 @@
                       <div class="row g-3">
                           <div class="col-sm-6">
                               <label for="nrItems" class="form-label">Number of items</label>
-                             <input asp-for="NrOfItemsToSeed" type="text" class="form-control is-invalid" id="nrItems" placeholder="" value="">
+                             <input asp-for="NrOfItemsToSeed" type="text" class="form-control is-invalid" id="nrItems" placeholder="" value="100">
                               <div class="invalid-feedback">
                                   Must give number to seed
                               </div>
