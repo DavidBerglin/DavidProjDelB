@@ -26,6 +26,7 @@ public class SeedModel : PageModel
 
     public async Task <IActionResult> OnPost()
     {
+        await _adminService.RemoveSeedAsync(true);
         await _adminService.SeedAsync(NrOfItemsToSeed);
         return Page();
     }

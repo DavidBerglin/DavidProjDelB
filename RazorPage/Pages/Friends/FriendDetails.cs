@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Models;
+using Models.DTO;
 using Models.Interfaces;
 using Services.Interfaces;
 
@@ -8,58 +10,88 @@ namespace myFirstRazorPage.Pages
     //Demonstrate how to read Query parameters
     public class FriendDetails : PageModel
     {
-        readonly ILogger<FriendDetails>? _logger = null;
-        readonly IFriendsService? _service = null;
-        readonly IPetsService? _petsService = null;
+        readonly IFriendsService _service;
+        readonly IAddressesService _addressService;
+        readonly IPetsService _petsService;
 
         public IFriend? Friend { get; set; }
-        public string? ErrorMessage { get; set; } = null;
+      
+        [BindProperty]
+        public AddressIM AddressIM { get; set; } = new ();
+        public bool EditAddress {get;set;}
 
-        public IActionResult OnGet(string id)
-        {
-            try
-            {
-                Guid _id = Guid.Parse(id);
-                Friend =  _service?.ReadFriendAsync(_id, false).Result.Item ?? null;
-            }
-            catch (Exception e)
-            {
-                ErrorMessage = e.Message;
-            }
+        public async Task<IActionResult> OnGet(Guid id, bool edit = false)
+        {   
+            // hämta vännen först
+            var result = await _service.ReadFriendAsync(id, false);
+            Friend = result?.Item;
+            // stoppar direkt om ingen vän hittas
+            if (Friend == null) return Page();
+            // sätta edit mode för adressen
+            EditAddress = edit;
+
+            // Tenary operator, beroende på om vännen har en address eller inte så fylls fälten i formuläret
+            AddressIM = Friend.Address != null 
+            ? new AddressIM(Friend.Address, Friend.FriendId) 
+            : new AddressIM() { FriendId = Friend.FriendId };
+            
             return Page();
         }
         public async Task<IActionResult> OnPostDelete(Guid id, Guid petId)
+        {   
+            // ta bort husdjuret och sen ladda om sidan på nytt
+            await _petsService.DeletePetAsync(petId);
+            return RedirectToPage("./FriendDetails", new { id = id });
+        }
+        public async Task<IActionResult> OnPostEdit()
         {
-            try
-            {
-                if (_petsService != null)
-                {
-                    await _petsService.DeletePetAsync(petId);
-                }
-                return RedirectToPage("./FriendDetails", new { id = id });
-            }
-                
+            var existingAddress = await _addressService.ReadAddressAsync(AddressIM.AddressId, false);
+            var friendIds = existingAddress?.Item?.Friends?.Select(f => f.FriendId).ToList();
             
-            catch (Exception e)
+            await _addressService.UpdateAddressAsync(new AddressCuDto
             {
-                ErrorMessage = e.Message;
-                if (_service != null)
-                {
-                    var result=  await _service.ReadFriendAsync(id, false);
-                    Friend = result?.Item ?? null;
-                }
-               
-                return Page();
-            }
+                AddressId = AddressIM.AddressId,
+                StreetAddress = AddressIM.StreetAddress,
+                City = AddressIM.City,
+                ZipCode = AddressIM.ZipCode,
+                Country = AddressIM.Country,
+                FriendsId = friendIds
+            });
+    
+            
+            return RedirectToPage("./FriendDetails", new { id = AddressIM.FriendId });
         }
         
 
         //Inject services just like in WebApi
-        public FriendDetails(IFriendsService service, IPetsService petsService, ILogger<FriendDetails> logger)
+        public FriendDetails(IFriendsService service, IAddressesService addressService, IPetsService petsService)
         {
-            _logger = logger;
             _service = service;
+            _addressService = addressService;
             _petsService = petsService;
         }
+    }
+    
+    public class AddressIM
+    {
+        public Guid AddressId { get; set; }
+        public Guid FriendId { get; set; }
+        public string StreetAddress { get; set; } = string.Empty;
+        public string City { get; set; } = string.Empty;
+        public int ZipCode { get; set; }
+        public string Country { get; set; } = string.Empty;
+
+        public AddressIM() { }
+
+        public AddressIM(IAddress address, Guid friendId)
+        {
+            AddressId = address.AddressId;
+            StreetAddress = address.StreetAddress;
+            City = address.City;
+            ZipCode = address.ZipCode;
+            Country = address.Country;
+            FriendId = friendId;
+        }
+       
     }
 }

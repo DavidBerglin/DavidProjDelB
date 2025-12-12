@@ -16,14 +16,19 @@
 
         <div class="row g-3">
             <div class="col-sm-6">
-                <label for="fullname" class="form-label">Fullname</label>
-                <input type="text" class="form-control" id="fullname"
-                    value="@Model.Friend.FirstName @Model.Friend.LastName" readonly>
+                <label for="firstname" class="form-label">Firstname</label>
+                <input type="text" class="form-control" id="firstname"
+                    value="@Model.Friend.FirstName" readonly>
+            </div>
+            <div class="col-sm-6">
+                <label for="lastname" class="form-label">Lastname</label>
+                <input type="text" class="form-control" id="lastname"
+                    value="@Model.Friend.LastName" readonly>
             </div>
             <div class="col-sm-6">
                 <label for="friendBirthday" class="form-label">Birthday</label>
                 <input type="text" class="form-control" id="friendBirthday"
-                    value="@(Model.Friend.Birthday != null ? Model.Friend.Birthday : "Couldnt find any birthday")"
+                    value="@(Model.Friend.Birthday.HasValue ? Model.Friend.Birthday.Value.ToString("yyyy-MM-dd") : "Couldnt find any birthday")"
                     readonly>
             </div>
             <div class="col-sm-6">
@@ -36,31 +41,59 @@
             </div>
             
             <h3 class="pb-2 border-bottom">Address</h3>
-
-            @if (Model.Friend.Address != null)
+            @if (!Model.EditAddress)
             {
                 <div class="col-sm-6">
-                    <label for="friendAddress" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="friendAddress" value="@Model.Friend.Address.StreetAddress"
-                        readonly>
+                    <label asp-for="Friend.Address.StreetAddress" class="form-label"></label>
+                    <input asp-for="Friend.Address.StreetAddress" class="form-control" readonly>
                 </div>
                 <div class="col-sm-6">
-                    <label for="friendAddress" class="form-label">City</label>
-                    <input type="text" class="form-control" id="friendAddress" value="@Model.Friend.Address.City" readonly>
+                    <label asp-for="Friend.Address.City" class="form-label"></label>
+                    <input asp-for="Friend.Address.City" class="form-control" readonly>
                 </div>
                  <div class="col-sm-6">
-                    <label for="friendAddress" class="form-label">Zipcode</label>
-                    <input type="text" class="form-control" id="friendAddress" value="@Model.Friend.Address.ZipCode"
-                        readonly>
+                    <label asp-for="Friend.Address.ZipCode" class="form-label"></label>
+                    <input asp-for="Friend.Address.ZipCode" class="form-control" readonly>
                 </div>
                 <div class="col-sm-6">
-                    <label for="friendAddress" class="form-label">Country</label>
-                    <input type="text" class="form-control" id="friendAddress" value="@Model.Friend.Address.Country"
-                        readonly>
+                    <label asp-for="Friend.Address.Country" class="form-label"></label>
+                    <input asp-for="Friend.Address.Country" class="form-control" readonly>
+                </div>
+                <div class="col-sm-12">
+                    <a asp-page="./FriendDetails" 
+                    asp-route-id="@Model.Friend.FriendId" 
+                    asp-route-edit="true" 
+                    class="btn btn-primary mt-3">Edit</a>
                 </div>
             }
-            
-
+              @if (Model.EditAddress)
+            {
+                <form method="post" asp-page-handler="Edit"> 
+                <div class="col-sm-6">
+                    <label asp-for="AddressIM.StreetAddress" class="form-label"></label>
+                    <input asp-for="AddressIM.StreetAddress" class="form-control">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="AddressIM.City" class="form-label"></label>
+                    <input asp-for="AddressIM.City" class="form-control">
+                </div>
+                 <div class="col-sm-6">
+                    <label asp-for="AddressIM.ZipCode" class="form-label"></label>
+                    <input asp-for="AddressIM.ZipCode" class="form-control">
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="AddressIM.Country" class="form-label"></label>
+                    <input asp-for="AddressIM.Country" class="form-control">
+                </div>
+                <input type="hidden" asp-for="AddressIM.AddressId" />
+                <input type="hidden" asp-for="AddressIM.FriendId" />
+                <button type="submit" class="btn btn-success mt-3">Save</button>
+                <a class="btn btn-secondary mt-3" 
+                   asp-page="./FriendDetails" 
+                   asp-route-id="@Model.Friend.FriendId">Cancel</a>
+                
+                </form>
+            }
 
             @if (Model.Friend.Pets != null)
             {
@@ -68,22 +101,39 @@
 
                 @foreach (var pet in Model.Friend.Pets)
                 {
-
                     <div class="col-sm-6">
-                        <label for="petName" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="petName" value="@pet.Name" readonly>
+                        <label for="petName-@pet.PetId" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="petName-@pet.PetId" value="@pet.Name" readonly>
                     </div>
 
                     <div class="col-sm-6">
-                        <label for="petKind" class="form-label">Kind</label>
-                        <input type="text" class="form-control" id="petKind" value="@pet.Kind" readonly>
+                        <label for="petKind-@pet.PetId" class="form-label">Kind</label>
+                        <input type="text" class="form-control" id="petKind-@pet.PetId" value="@pet.Kind" readonly>
                     </div>
+                    
                     <form method="post">
-                    <input type="hidden" name="id" value="@Model.Friend.FriendId" />
-                    <input type="hidden" name="petId" value="@pet.PetId" />
-                      <button type="submit" asp-page-handler="Delete" class="btn btn-danger btn-sm m-1">
-                    Del
-                </button>
+                        <input type="hidden" name="friendId" value="@Model.Friend.FriendId" />
+                        <input type="hidden" name="petId" value="@pet.PetId" />
+                        <button type="button" class="btn btn-success btn-sm m-1"
+                            data-bs-toggle="modal" data-bs-target="#deleteModal@(pet.PetId)">Del</button>
+                        
+                        <div class="modal fade" id="deleteModal@(pet.PetId)" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-danger">Confirm deletion</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        You are about to delete @pet.Name. the @pet.Kind Are you sure?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <button type="submit" asp-page-handler="Delete" class="btn btn-danger">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 }
             }
