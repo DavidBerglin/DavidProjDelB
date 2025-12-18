@@ -39,27 +39,62 @@
 
 
 
-          <div class="container px-4 py-4" id="webapi-info">
-          <h2 class="pb-2 border-bottom">City information</h2>
-          <p>Friends in each city in the picked country. </p>
-          @if (Model.CityInfo != null) {
-            @foreach (var info in Model.CityInfo) 
-            {      
-                       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4 py-5">
-            <div class="col d-flex align-items-start">
-              <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#home"/></svg>
-              <div>
-                <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">@(info.City != null ? info.City : "Homeless" )</h3>
-                <p>@info.NrFriends</p>
-                <a asp-page="/Friends/Overview" asp-route-searchString=@info.City class="btn btn-primary">
-                  See friends
-                </a>    
-              </div>
+          <div class="container px-4 py-5" id="webapi-info">
+          <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold text-primary mb-3">
+              <svg class="bi me-3" width="50" height="50"><use xlink:href="#home"/></svg>
+              City Overview
+            </h1>
+            <p class="lead text-muted">Discover friends and pets in each city within your selected country</p>
+          </div>
+          
+          @if (Model.CityInfo != null && Model.CityInfo.Any()) {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+              @foreach (var info in Model.CityInfo) 
+              {      
+                <div class="col">
+                  <div class="card h-100 shadow-sm border-0 overflow-hidden">
+                    <div class="card-header bg-gradient text-white text-center py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                      <svg class="bi mb-2" width="2em" height="2em" fill="currentColor"><use xlink:href="#home"/></svg>
+                      <h4 class="card-title mb-0 fw-bold">@(info.City ?? "Unknown City")</h4>
+                    </div>
+                    <div class="card-body p-4">
+                      <div class="row text-center">
+                        <div class="col-6">
+                          <div class="p-3 rounded-3 bg-light mb-3">
+                            <svg class="bi text-success mb-2" width="2em" height="2em"><use xlink:href="#album"/></svg>
+                            <h3 class="fw-bold text-success mb-1">@info.NrFriends</h3>
+                            <p class="text-muted small mb-0">Friends</p>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="p-3 rounded-3 bg-light mb-3">
+                            <svg class="bi text-warning mb-2" width="2em" height="2em"><use xlink:href="#boombox"/></svg>
+                            <h3 class="fw-bold text-warning mb-1">@info.NrPets</h3>
+                            <p class="text-muted small mb-0">Pets</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer bg-white border-0 p-3">
+                      <div class="d-grid gap-2">
+                        <a asp-page="/Friends/Overview" asp-route-searchString="@info.City" 
+                           class="btn btn-primary btn-lg">
+                          <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#edit"/></svg>
+                          Explore @(info.City ?? "City")
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
             </div>
+          }
+          else {
+            <div class="text-center py-5">
+              <svg class="bi text-muted mb-4" width="4em" height="4em"><use xlink:href="#home"/></svg>
+              <h3 class="text-muted">No City Data Available</h3>
+              <p class="text-muted">There are no cities with friends in this country yet.</p>
             </div>
-            }
-    }
-    else {
-        <p>No city information available for this country.</p>
-    }
+          }
          

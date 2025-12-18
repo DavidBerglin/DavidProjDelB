@@ -22,7 +22,8 @@ namespace RazorPage.Pages.Friends;
             .Select(g => new GstUsrInfoFriendsDto
                 {
                     City = g.Key,
-                    NrFriends = g.Count()
+                    NrFriends = g.Count(),
+                    NrPets = g.Sum(f => f.Pets?.Count() ?? 0)
                 }).ToList();
 
             return Page();
