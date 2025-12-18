@@ -13,6 +13,7 @@ namespace myFirstRazorPage.Pages
         readonly IFriendsService _service;
         readonly IAddressesService _addressService;
         readonly IPetsService _petsService;
+        readonly IQuotesService _quotesService;
 
         public IFriend? Friend { get; set; }
       
@@ -37,12 +38,23 @@ namespace myFirstRazorPage.Pages
             
             return Page();
         }
-        public async Task<IActionResult> OnPostDelete(Guid id, Guid petId)
+        public async Task<IActionResult> OnPostDelete(Guid friendId, Guid petId, Guid quoteId)
         {   
-            // ta bort husdjuret och sen ladda om sidan på nytt
-            await _petsService.DeletePetAsync(petId);
-            return RedirectToPage("./FriendDetails", new { id = id });
+            // Kontrollera vilket ID som är giltigt och ta bort antingen pet eller quote
+            if (petId != Guid.Empty)
+            {
+                // Ta bort husdjuret
+                await _petsService.DeletePetAsync(petId);
+            }
+            else if (quoteId != Guid.Empty)
+            {
+                // Ta bort citatet
+                await _quotesService.DeleteQuoteAsync(quoteId);
+            }
+            
+            return RedirectToPage("./FriendDetails", new { id = friendId });
         }
+        
         public async Task<IActionResult> OnPostEdit()
         {
             var existingAddress = await _addressService.ReadAddressAsync(AddressIM.AddressId, false);
@@ -64,11 +76,12 @@ namespace myFirstRazorPage.Pages
         
 
         //Inject services just like in WebApi
-        public FriendDetails(IFriendsService service, IAddressesService addressService, IPetsService petsService)
+        public FriendDetails(IFriendsService service, IAddressesService addressService, IPetsService petsService, IQuotesService quotesService)
         {
             _service = service;
             _addressService = addressService;
             _petsService = petsService;
+            _quotesService = quotesService;
         }
     }
     

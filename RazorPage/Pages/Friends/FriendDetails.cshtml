@@ -63,7 +63,7 @@
                     <a asp-page="./FriendDetails" 
                     asp-route-id="@Model.Friend.FriendId" 
                     asp-route-edit="true" 
-                    class="btn btn-primary mt-3">Edit</a>
+                    class="btn btn-success btn-sm m-1">Edit</a>
                 </div>
             }
             @if (Model.EditAddress)
@@ -149,12 +149,40 @@
 
                 @foreach (var quote in Model.Friend.Quotes)
                 {
-
-                    <div class="col-sm-12">
-                        <label for="quoteText" class="form-label">Quote</label>
-                        <input type="text" class="form-control" id="quoteText" value="@quote.QuoteText By: @quote.Author" readonly>
+                    <div class="col-sm-6">
+                        <label for="quoteText-@quote.QuoteId" class="form-label">Quote</label>
+                        <input type="text" class="form-control" id="quoteText-@quote.QuoteId" value="@quote.QuoteText" readonly>
                     </div>
-                   
+
+                    <div class="col-sm-6">
+                        <label for="quoteAuthor-@quote.QuoteId" class="form-label">Author</label>
+                        <input type="text" class="form-control" id="quoteAuthor-@quote.QuoteId" value="@quote.Author" readonly>
+                    </div>
+                    
+                    <form method="post">
+                        <input type="hidden" name="friendId" value="@Model.Friend.FriendId" />
+                        <input type="hidden" name="quoteId" value="@quote.QuoteId" />
+                        <button type="button" class="btn btn-success btn-sm m-1"
+                            data-bs-toggle="modal" data-bs-target="#deleteModalQuote@(quote.QuoteId)">Del</button>
+                        
+                        <div class="modal fade" id="deleteModalQuote@(quote.QuoteId)" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title text-danger">Confirm deletion</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        You are about to delete a quote  by @quote.Author. Are you sure?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <button type="submit" asp-page-handler="Delete" class="btn btn-danger">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 }
             }
             else
