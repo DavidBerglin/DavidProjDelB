@@ -39,28 +39,53 @@
 
 
 
-          <div class="container px-4 py-4" id="webapi-info">
-          <h2 class="pb-2 border-bottom">Country information</h2>
-          <p>Showing how many friends in each country. </p>
-          @if (Model.Countryinfo != null) {
+          <div class="container px-4 py-5" id="webapi-info">
+          <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold text-primary mb-3">
+              <svg class="bi me-3" width="50" height="50"><use xlink:href="#home"/></svg>
+              Country Overview
+            </h1>
+            <p class="lead text-muted">Discover how many friends are in each country</p>
+          </div>
+          
+          @if (Model.Countryinfo != null && Model.Countryinfo.Any()) {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             @foreach (var info in Model.Countryinfo) 
             {      
-                       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-4 py-5">
-            <div class="col d-flex align-items-start">
-              <svg class="bi text-body-secondary flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#home"/></svg>
-              <div>
-                <h3 class="fw-bold mb-0 fs-4 text-body-emphasis">@(info.Country != null ? info.Country : "Homeless" )</h3>
-                <p>@info.NrFriends</p>
-                <a asp-page="/Friends/OverviewCountry" asp-route-id="@info.Country" class="btn btn-primary">
-                  Show cities
-                </a>    
-              </div>
-            </div>
-            </div>
+                <div class="col">
+                  <div class="card h-100 shadow-sm border-0 overflow-hidden">
+                    <div class="card-header bg-gradient text-white text-center py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                      <svg class="bi mb-2" width="2em" height="2em" fill="currentColor"><use xlink:href="#home"/></svg>
+                      <h4 class="card-title mb-0 fw-bold">@(info.Country != null ? info.Country : "Homeless")</h4>
+                    </div>
+                    <div class="card-body p-4">
+                      <div class="text-center">
+                        <div class="p-3 rounded-3 bg-light mb-3">
+                          <svg class="bi text-success mb-2" width="2em" height="2em"><use xlink:href="#album"/></svg>
+                          <h3 class="fw-bold text-success mb-1">@info.NrFriends</h3>
+                          <p class="text-muted small mb-0">Friends</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-footer bg-white border-0 p-3">
+                      <div class="d-grid gap-2">
+                        <a asp-page="/Friends/OverviewCountry" asp-route-id="@info.Country" class="btn btn-primary btn-lg">
+                          <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#edit"/></svg>
+                          Show Cities
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             }
+            </div>
     }
     else {
-        <p>No country information available.</p>
+        <div class="text-center py-5">
+          <svg class="bi text-muted mb-4" width="4em" height="4em"><use xlink:href="#home"/></svg>
+          <h3 class="text-muted">No Country Data Available</h3>
+          <p class="text-muted">There are no countries with friends yet.</p>
+        </div>
     }
                
          
