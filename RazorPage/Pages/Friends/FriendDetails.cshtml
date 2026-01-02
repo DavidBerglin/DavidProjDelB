@@ -118,7 +118,7 @@
                 }
                 @if (Model.EditFriend)
                 {
-                    <form method="post" asp-page-handler="EditFriend" novalidate>
+                    <form method="post" asp-page-handler="EditFriend" >
                         <div class="row g-3">
                             <div class="col-12">
                                 <div asp-validation-summary="All" class="text-danger"></div>
@@ -206,7 +206,7 @@
                 }
                 @if (Model.EditAddress)
                 {
-                    <form method="post" asp-page-handler="Edit" novalidate>
+                    <form method="post" asp-page-handler="Edit">
                         <div class="row g-3">
                             <div class="col-12">
                                 <div asp-validation-summary="All" class="text-danger"></div>

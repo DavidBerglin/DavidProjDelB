@@ -62,6 +62,9 @@ namespace myFirstRazorPage.Pages
         
         public async Task<IActionResult> OnPostEdit()
         {
+            // För att köra validering enbart på AddressIM
+            // Annars vill den validera FriendIM också
+            // trots att enbart AddressIM används i denna post
             ModelState.Clear();
             if (!TryValidateModel(AddressIM, nameof(AddressIM)))
             {
@@ -88,7 +91,7 @@ namespace myFirstRazorPage.Pages
         }
         public async Task<IActionResult> OnPostEditFriend()
         {
-         
+            // Samma här, validera bara FriendIM
             ModelState.Clear();
             if (!TryValidateModel(FriendIM, nameof(FriendIM)))
             {
@@ -124,16 +127,16 @@ namespace myFirstRazorPage.Pages
     {
         public Guid AddressId { get; set; }
         public Guid FriendId { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Street address is required.")]
         [StringLength(100)]
         public string StreetAddress { get; set; } = string.Empty;
-        [Required]
+        [Required(ErrorMessage = "City is required.")]
         [StringLength(100)]
         public string City { get; set; } = string.Empty;
-         [Required]
+         [Required(ErrorMessage = "Zip code is required.")  ]
         [Range(10000, 99999)]
         public int ZipCode { get; set; }
-         [Required]
+         [Required(ErrorMessage = "Country is required.")]
         [StringLength(100)]
         public string Country { get; set; } = string.Empty;
 
@@ -154,13 +157,13 @@ namespace myFirstRazorPage.Pages
     public class FriendIM
     {
         public Guid FriendId { get; set; }
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "First name is required. Between 3 and 50 characters.")]
+        [StringLength(50), MinLength(3)]
         public string FirstName { get; set; } = string.Empty;
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Last name is required. Between 3 and 50 characters.")]
+        [StringLength(50), MinLength(3)]
         public string LastName { get; set; } = string.Empty;
-        [Required]
+        [Required(ErrorMessage = "Email is required.")]
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
      
