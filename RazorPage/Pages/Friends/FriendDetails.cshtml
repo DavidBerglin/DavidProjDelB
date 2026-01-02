@@ -80,34 +80,87 @@
                 </h4>
             </div>
             <div class="card-body p-4">
+                @if (!Model.EditFriend)
+                {
                 <div class="row g-3">
                     <div class="col-sm-6">
-                        <label for="firstname" class="form-label fw-semibold">Firstname</label>
-                        <input type="text" class="form-control bg-light" id="firstname" value="@Model.Friend.FirstName"
-                            readonly>
+                        <label class="form-label fw-semibold">Firstname</label>
+                        <div class="form-control bg-light" id="firstname">@Model.Friend.FirstName</div>
                     </div>
                     <div class="col-sm-6">
-                        <label for="lastname" class="form-label fw-semibold">Lastname</label>
-                        <input type="text" class="form-control bg-light" id="lastname" value="@Model.Friend.LastName"
-                            readonly>
+                        <label class="form-label fw-semibold">Lastname</label>
+                        <div class="form-control bg-light" id="lastname">@Model.Friend.LastName</div>
                     </div>
                     <div class="col-sm-6">
-                        <label for="friendBirthday" class="form-label fw-semibold">Birthday</label>
-                        <input type="text" class="form-control bg-light" id="friendBirthday"
-                            value="@(Model.Friend.Birthday.HasValue? Model.Friend.Birthday.Value.ToString("yyyy-MM-dd") : "Couldnt find any birthday")"
-                            readonly>
+                        <label  class="form-label fw-semibold">Birthday</label>
+                        <div class="form-control bg-light" id="friendBirthday">
+                            @(Model.Friend.Birthday.HasValue ? Model.Friend.Birthday.Value.ToString("yyyy-MM-dd") : "Couldnt find any birthday")
+                        </div>
                     </div>
                     <div class="col-sm-6">
-                        <label for="friendEmail" class="form-label fw-semibold">Email</label>
-                        <input type="text" class="form-control bg-light" id="friendEmail" value="@Model.Friend.Email"
-                            readonly>
+                        <label  class="form-label fw-semibold">Email</label>
+                        <div class="form-control bg-light" id="friendEmail">@Model.Friend.Email</div>
                     </div>
                     <div class="col-sm-6">
-                        <label for="friendID" class="form-label fw-semibold">Friend ID</label>
-                        <input type="text" class="form-control bg-light" id="friendID" value="@Model.Friend.FriendId"
-                            readonly>
+                        <label  class="form-label fw-semibold">Friend ID</label>
+                        <div class="form-control bg-light" id="friendID">@Model.Friend.FriendId</div>
                     </div>
                 </div>
+                   <div class="col-sm-12">
+                            <a asp-page="./FriendDetails" asp-route-id="@Model.Friend.FriendId" asp-route-editFriend="true"
+                            class="btn btn-primary btn-sm mt-2">
+                            <svg class="bi me-1" width="0.9em" height="0.9em" fill="white">
+                            <use xlink:href="#edit" />
+                            </svg>
+                            Edit friend
+                            </a>
+                    </div>
+                }
+                @if (Model.EditFriend)
+                {
+                    <form method="post" asp-page-handler="EditFriend" novalidate>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="FriendIM.FirstName" class="form-label"></label>
+                                <input asp-for="FriendIM.FirstName" class="form-control">
+                                <span asp-validation-for="FriendIM.FirstName" class="text-danger"></span>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="FriendIM.LastName" class="form-label"></label>
+                                <input asp-for="FriendIM.LastName" class="form-control">
+                                <span asp-validation-for="FriendIM.LastName" class="text-danger"></span>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="FriendIM.Email" class="form-label"></label>
+                                <input asp-for="FriendIM.Email" class="form-control">
+                                <span asp-validation-for="FriendIM.Email" class="text-danger"></span>
+
+                            </div>
+                            <input type="hidden" asp-for="FriendIM.FriendId" />
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-success btn-sm mt-2">
+                                    <svg class="bi me-1" width="0.9em" height="0.9em" fill="white">
+                                        <use xlink:href="#save" />
+                                    </svg>
+                                    Save Changes
+                                </button>
+                                <a class="btn btn-outline-secondary btn-sm ms-2 mt-2" asp-page="./FriendDetails"
+                                    asp-route-id="@Model.Friend.FriendId">
+                                    <svg class="bi me-1" width="0.9em" height="0.9em">
+                                        <use xlink:href="#undo" />
+                                    </svg>
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                }
+                
             </div>
         </div>
 
@@ -141,7 +194,7 @@
                             <input asp-for="Friend.Address.Country" class="form-control bg-light" readonly>
                         </div>
                         <div class="col-sm-12">
-                            <a asp-page="./FriendDetails" asp-route-id="@Model.Friend.FriendId" asp-route-edit="true"
+                            <a asp-page="./FriendDetails" asp-route-id="@Model.Friend.FriendId" asp-route-editAddress="true"
                                 class="btn btn-primary btn-sm mt-2">
                                 <svg class="bi me-1" width="0.9em" height="0.9em" fill="white">
                                     <use xlink:href="#edit" />

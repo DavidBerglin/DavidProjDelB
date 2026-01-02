@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Models;
 using Models.DTO;
 using Models.Interfaces;
@@ -8,7 +9,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace myFirstRazorPage.Pages
 {
-    //Demonstrate how to read Query parameters
     public class FriendDetails : PageModel
     {
         readonly IFriendsService _service;
@@ -20,23 +20,27 @@ namespace myFirstRazorPage.Pages
       
         [BindProperty]
         public AddressIM AddressIM { get; set; } = new ();
+        [BindProperty]
+        public FriendIM FriendIM { get; set; } = new ();
         public bool EditAddress {get;set;}
+        public bool EditFriend {get;set;}
 
-        public async Task<IActionResult> OnGet(Guid id, bool edit = false)
+        public async Task<IActionResult> OnGet(Guid id, bool editAddress = false, bool editFriend = false)
         {   
             // hämta vännen först
             var result = await _service.ReadFriendAsync(id, false);
             Friend = result?.Item;
             // stoppar direkt om ingen vän hittas
             if (Friend == null) return Page();
-            // sätta edit mode för adressen
-            EditAddress = edit;
+            // sätta edit mode för adressen/friend
+            EditAddress = editAddress;
+            EditFriend = editFriend;
 
             // Tenary operator, beroende på om vännen har en address eller inte så fylls fälten i formuläret
             AddressIM = Friend.Address != null 
             ? new AddressIM(Friend.Address, Friend.FriendId) 
             : new AddressIM() { FriendId = Friend.FriendId };
-            
+            FriendIM = new FriendIM(Friend);
             return Page();
         }
         public async Task<IActionResult> OnPostDelete(Guid friendId, Guid petId, Guid quoteId)
@@ -58,7 +62,8 @@ namespace myFirstRazorPage.Pages
         
         public async Task<IActionResult> OnPostEdit()
         {
-            if (!ModelState.IsValid)
+            ModelState.Clear();
+            if (!TryValidateModel(AddressIM, nameof(AddressIM)))
             {
                 EditAddress = true;
                 var result = await _service.ReadFriendAsync(AddressIM.FriendId, false);
@@ -81,9 +86,31 @@ namespace myFirstRazorPage.Pages
             
             return RedirectToPage("./FriendDetails", new { id = AddressIM.FriendId });
         }
+        public async Task<IActionResult> OnPostEditFriend()
+        {
+         
+            ModelState.Clear();
+            if (!TryValidateModel(FriendIM, nameof(FriendIM)))
+            {
+                EditFriend = true;
+                var result = await _service.ReadFriendAsync(FriendIM.FriendId, false);
+                Friend = result?.Item;
+                return Page();
+            }
+            var existingFriend = await _service.ReadFriendAsync(FriendIM.FriendId, false);
+            var addressId = existingFriend?.Item?.Address?.AddressId;
+
+            await _service.UpdateFriendAsync(new FriendCuDto
+            {
+                FriendId = FriendIM.FriendId,
+                FirstName = FriendIM.FirstName,
+                LastName = FriendIM.LastName,
+                Email = FriendIM.Email,
+                AddressId = addressId
+            });
+            return RedirectToPage("./FriendDetails", new { id = FriendIM.FriendId });        }
         
 
-        //Inject services just like in WebApi
         public FriendDetails(IFriendsService service, IAddressesService addressService, IPetsService petsService, IQuotesService quotesService)
         {
             _service = service;
@@ -122,5 +149,29 @@ namespace myFirstRazorPage.Pages
             FriendId = friendId;
         }
        
+    }
+    
+    public class FriendIM
+    {
+        public Guid FriendId { get; set; }
+        [Required]
+        [StringLength(50)]
+        public string FirstName { get; set; } = string.Empty;
+        [Required]
+        [StringLength(50)]
+        public string LastName { get; set; } = string.Empty;
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+     
+        public FriendIM() { }
+        public FriendIM(IFriend friend)
+        {
+            FriendId = friend.FriendId;
+            FirstName = friend.FirstName;
+            LastName = friend.LastName;
+            Email = friend.Email;
+        }
+
     }
 }

@@ -11,7 +11,7 @@ namespace RazorPage.Pages.Friends;
         private readonly IAddressesService _addressesService;
         private readonly IFriendsService _friendsService;
         private readonly IAdminService _adminService;
-        public IEnumerable<GstUsrInfoFriendsDto>? CityInfo;
+        public IEnumerable<CityInfoDto>? CityInfo;
         public async Task<IActionResult> OnGet(string id)
         {
             var friends = await _friendsService.ReadFriendsAsync(true, false, null, 0, 100); 
@@ -19,7 +19,7 @@ namespace RazorPage.Pages.Friends;
             .Where(f => f.Address?.Country == id)
             .Where(f => f.Address?.City != null)
             .GroupBy(f => f.Address.City)
-            .Select(g => new GstUsrInfoFriendsDto
+            .Select(g => new CityInfoDto
                 {
                     City = g.Key,
                     NrFriends = g.Count(),

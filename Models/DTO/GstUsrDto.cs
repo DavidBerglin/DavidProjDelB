@@ -21,7 +21,6 @@ public class GstUsrInfoFriendsDto
     public string Country { get; set; } = null;
     public string City { get; set; } = null;
     public int NrFriends { get; set; } = 0;
-    public int NrPets { get; set; } = 0;
 }
 
 public class GstUsrInfoPetsDto
@@ -29,6 +28,12 @@ public class GstUsrInfoPetsDto
     public string Country { get; set; } = null;
     public string City { get; set; } = null;
     public int NrPets { get; set; } = 0;
+}
+public class CityInfoDto
+{
+    public string City { get; set; } = "";
+    public int NrFriends { get; set; }
+    public int NrPets { get; set; }
 }
 
 public class GstUsrInfoQuotesDto
