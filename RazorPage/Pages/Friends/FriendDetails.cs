@@ -4,6 +4,7 @@ using Models;
 using Models.DTO;
 using Models.Interfaces;
 using Services.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace myFirstRazorPage.Pages
 {
@@ -57,6 +58,13 @@ namespace myFirstRazorPage.Pages
         
         public async Task<IActionResult> OnPostEdit()
         {
+            if (!ModelState.IsValid)
+            {
+                EditAddress = true;
+                var result = await _service.ReadFriendAsync(AddressIM.FriendId, false);
+                Friend = result?.Item;
+                return Page();
+            }
             var existingAddress = await _addressService.ReadAddressAsync(AddressIM.AddressId, false);
             var friendIds = existingAddress?.Item?.Friends?.Select(f => f.FriendId).ToList();
             
@@ -89,9 +97,17 @@ namespace myFirstRazorPage.Pages
     {
         public Guid AddressId { get; set; }
         public Guid FriendId { get; set; }
+        [Required]
+        [StringLength(100)]
         public string StreetAddress { get; set; } = string.Empty;
+        [Required]
+        [StringLength(100)]
         public string City { get; set; } = string.Empty;
+         [Required]
+        [Range(10000, 99999)]
         public int ZipCode { get; set; }
+         [Required]
+        [StringLength(100)]
         public string Country { get; set; } = string.Empty;
 
         public AddressIM() { }
