@@ -15,14 +15,14 @@ public class OverviewModel : PageModel
 
      //Pagination
     public int NrOfPages { get; set; }
-    public int PageSize { get; } = 5;
+    public int PageSize { get; } = 15;
 
     public int ThisPageNr { get; set; } = 0;
     public int PrevPageNr { get; set; } = 0;
     public int NextPageNr { get; set; } = 0;
     public int PresentPages { get; set; } = 0;
 
-    public async Task<IActionResult> OnGet(string searchString)
+    public async Task<IActionResult> OnGet(string searchString, int pageNumber = 0)
     {
         var friendresponse = await _friendsService.ReadFriendsAsync(true, false, null, 0, 100);
         if (friendresponse?.PageItems != null)
@@ -34,9 +34,24 @@ public class OverviewModel : PageModel
                 || 
                 f.Address?.Country?.ToLower().Contains(searchString.ToLower()) == true)
                 .ToList();
+            Pagination(pageNumber, Friends.Count);
+            Friends = Friends
+                .Skip(ThisPageNr * PageSize)
+                .Take(PageSize)
+                .ToList();
         }
         return Page();
 
+    }
+    private void Pagination(int pageNumber, int totalItems)
+    {
+    ThisPageNr = pageNumber;
+
+    NrOfPages = (int)Math.Ceiling((double)totalItems / PageSize);
+
+    PrevPageNr = Math.Max(0, ThisPageNr - 1);
+    NextPageNr = Math.Min(NrOfPages - 1, ThisPageNr + 1);
+    PresentPages = NrOfPages;
     }
     public OverviewModel(IAddressesService addressesService, IAdminService adminService, IFriendsService friendsService)
     {

@@ -59,7 +59,9 @@
 
     <div class="text-center mb-5">
         <h1 class="display-5 fw-bold text-primary mb-3">
-            <svg class="bi bi-boombox" width="50" height="50"><use xlink:href="#person-fill" /></svg>
+            <svg class="bi bi-boombox" width="50" height="50">
+                <use xlink:href="#person-fill" />
+            </svg>
             Friends
         </h1>
         <p class="lead text-muted">List of all friends</p>
@@ -67,14 +69,16 @@
 
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-header bg-gradient text-white py-3"
-             style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="mb-0 fw-bold">
-                    <svg class="bi me-2" width="1.5em" height="1.5em" fill="currentColor"><use xlink:href="#album" /></svg>
+                    <svg class="bi me-2" width="1.5em" height="1.5em" fill="currentColor">
+                        <use xlink:href="#album" />
+                    </svg>
                     All friends
                 </h4>
 
-            
+
             </div>
         </div>
 
@@ -85,13 +89,17 @@
                 <div class="row g-2 justify-content-center">
                     <div class="col-12 col-md-7 col-lg-6">
                         <div class="form-floating">
-                            <input class="form-control" type="search" placeholder="Search for a city" name="searchString" />
+                            <input class="form-control" type="search" placeholder="Search for a city"
+                                name="searchString" 
+                                value="@Request.Query["searchString"]" />
                             <label>Search for a city/country</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-3 col-lg-2 d-grid">
                         <button class="btn btn-outline-success" type="submit">
-                            <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#edit" /></svg>
+                            <svg class="bi me-2" width="1em" height="1em">
+                                <use xlink:href="#edit" />
+                            </svg>
                             Search
                         </button>
                     </div>
@@ -110,8 +118,10 @@
                                 </h5>
 
                                 <a asp-page="/Friends/FriendDetails" asp-route-id=@friend.FriendId
-                                   class="btn btn-primary btn-sm" type="button">
-                                    <svg class="bi me-1" width="0.9em" height="0.9em"><use xlink:href="#edit" /></svg>
+                                    class="btn btn-primary btn-sm" type="button">
+                                    <svg class="bi me-1" width="0.9em" height="0.9em">
+                                        <use xlink:href="#edit" />
+                                    </svg>
                                     View
                                 </a>
                             </div>
@@ -122,16 +132,25 @@
 
             <nav class="mt-4" aria-label="Standard pagination example">
                 <ul class="pagination justify-content-center mb-0">
-                    <li class="page-item">
-                        <a class="page-link" href="#list-of-items" aria-label="Previous">
+
+                    <li class="page-item @(Model.ThisPageNr <= 0 ? "disabled" : "")">
+                        <a class="page-link" asp-page="/Friends/Overview" asp-route-pageNumber="@Model.PrevPageNr"
+                            asp-route-searchString="@Request.Query["searchString"]" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li class="page-item"><a class="page-link" href="#list-of-items">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#list-of-items">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#list-of-items">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#list-of-items" aria-label="Next">
+                    @for (int i = 0; i < Model.PresentPages; i++)
+                    {
+                        <li class="page-item @(i == Model.ThisPageNr ? "active" : "")">
+                            <a class="page-link" asp-page="/Friends/Overview" asp-route-pageNumber="@i"
+                                asp-route-searchString="@Request.Query["searchString"]">
+                                @(i + 1)
+                            </a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.ThisPageNr >= Model.NrOfPages - 1 ? "disabled" : "")">
+                        <a class="page-link" asp-page="/Friends/Overview" asp-route-pageNumber="@Model.NextPageNr"
+                            asp-route-searchString="@Request.Query["searchString"]" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
