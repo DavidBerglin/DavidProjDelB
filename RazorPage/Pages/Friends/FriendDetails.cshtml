@@ -1,0 +1,420 @@
+@page
+@using Models
+@using System.Diagnostics.Eventing.Reader
+@using myFirstRazorPage.Pages
+@model FriendDetails
+@{
+    ViewData["Title"] = "Friend information";
+    Layout = "_Layout";
+}
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <symbol id="home" viewBox="0 0 16 16">
+        <path
+            d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z" />
+    </symbol>
+    <symbol id="edit" viewBox="0 0 16 16">
+        <path
+            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+        <path fill-rule="evenodd"
+            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+    </symbol>
+    <symbol id="undo" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2z" />
+        <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466" />
+    </symbol>
+    <symbol id="save" viewBox="0 0 16 16">
+        <path d="M11 2H9v3h2z" />
+        <path
+            d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z" />
+    </symbol>
+    <symbol id="boombox" viewBox="0 0 16 16">
+        <path
+            d="M14 0a.5.5 0 0 1 .5.5V2h.5a1 1 0 0 1 1 1v2H0V3a1 1 0 0 1 1-1h12.5V.5A.5.5 0 0 1 14 0M2 3.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m7.5.5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1m1.5-.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0M9.5 3h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1M6 10.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m-1.5.5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1m7 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m.5-1.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0" />
+        <path
+            d="M0 6h16v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm2 4.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 0 0-5 0m7 0a2.5 2.5 0 1 0 5 0 2.5 2.5 0 0 0-5 0" />
+    </symbol>
+    <symbol id="album" viewBox="0 0 16 16">
+        <path d="M8 6a2 2 0 1 0 0 4 2 2 0 0 0 0-4m0 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0" />
+    </symbol>
+    <symbol id="person-fill" viewBox="0 0 16 16">
+        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+    </symbol>
+    <symbol id="chat-fill" viewBox="0 0 16 16">
+        <path
+            d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15" />
+    </symbol>
+    <symbol id="heart-fill" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+    </symbol>
+    <symbol id="artist" viewBox="0 0 16 16">
+        <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2" />
+        <path fill-rule="evenodd" d="M12 3v10h-1V3z" />
+        <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1z" />
+        <path fill-rule="evenodd"
+            d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5m0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5m0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5" />
+    </symbol>
+</svg>
+
+@if (Model.Friend != null)
+{
+    <div class="container px-4 py-5">
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold text-primary mb-3">
+                <svg class="bi bi-person-fill" width="50" height="50">
+                    <use xlink:href="#person-fill" />
+                </svg>
+                Friend Details
+            </h1>
+            <p class="lead text-muted">Complete information about @Model.Friend.FirstName @Model.Friend.LastName</p>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h4 class="mb-0 fw-bold text-white">
+                    <svg class="bi bi-person-fill" width="1.5em" height="1.5em" fill="white">
+                        <use xlink:href="#person-fill" />
+                    </svg>
+                    Personal Information
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                @if (!Model.EditFriend)
+                {
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">Firstname</label>
+                        <div class="form-control bg-light" id="firstname">@Model.Friend.FirstName</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label fw-semibold">Lastname</label>
+                        <div class="form-control bg-light" id="lastname">@Model.Friend.LastName</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label  class="form-label fw-semibold">Birthday</label>
+                        <div class="form-control bg-light" id="friendBirthday">
+                            @(Model.Friend.Birthday.HasValue ? Model.Friend.Birthday.Value.ToString("yyyy-MM-dd") : "Couldnt find any birthday")
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label  class="form-label fw-semibold">Email</label>
+                        <div class="form-control bg-light" id="friendEmail">@Model.Friend.Email</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label  class="form-label fw-semibold">Friend ID</label>
+                        <div class="form-control bg-light" id="friendID">@Model.Friend.FriendId</div>
+                    </div>
+                </div>
+                   <div class="col-sm-12">
+                            <a asp-page="./FriendDetails" asp-route-id="@Model.Friend.FriendId" asp-route-editFriend="true"
+                            class="btn btn-primary btn-sm mt-2">
+                            <svg class="bi me-1" width="0.9em" height="0.9em" fill="white">
+                            <use xlink:href="#edit" />
+                            </svg>
+                            Edit friend
+                            </a>
+                    </div>
+                }
+                @if (Model.EditFriend)
+                {
+                    <form method="post" asp-page-handler="EditFriend" >
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="FriendIM.FirstName" class="form-label"></label>
+                                <input asp-for="FriendIM.FirstName" class="form-control">
+                                <span asp-validation-for="FriendIM.FirstName" class="text-danger"></span>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="FriendIM.LastName" class="form-label"></label>
+                                <input asp-for="FriendIM.LastName" class="form-control">
+                                <span asp-validation-for="FriendIM.LastName" class="text-danger"></span>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="FriendIM.Email" class="form-label"></label>
+                                <input asp-for="FriendIM.Email" class="form-control">
+                                <span asp-validation-for="FriendIM.Email" class="text-danger"></span>
+
+                            </div>
+                            <input type="hidden" asp-for="FriendIM.FriendId" />
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-success btn-sm mt-2">
+                                    <svg class="bi me-1" width="0.9em" height="0.9em" fill="white">
+                                        <use xlink:href="#save" />
+                                    </svg>
+                                    Save Changes
+                                </button>
+                                <a class="btn btn-outline-secondary btn-sm ms-2 mt-2" asp-page="./FriendDetails"
+                                    asp-route-id="@Model.Friend.FriendId">
+                                    <svg class="bi me-1" width="0.9em" height="0.9em">
+                                        <use xlink:href="#undo" />
+                                    </svg>
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                }
+                
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h4 class="mb-0 fw-bold text-white">
+                    <svg class="bi me-2" width="1.5em" height="1.5em" fill="white">
+                        <use xlink:href="#home" />
+                    </svg>
+                    Address
+                </h4>
+            </div>
+            <div class="card-body p-4">
+                @if (!Model.EditAddress && Model.Friend.Address != null)
+                {
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label asp-for="Friend.Address.StreetAddress" class="form-label fw-semibold"></label>
+                            <input asp-for="Friend.Address.StreetAddress" class="form-control bg-light" readonly>
+                        </div>
+                        <div class="col-sm-6">
+                            <label asp-for="Friend.Address.City" class="form-label fw-semibold"></label>
+                            <input asp-for="Friend.Address.City" class="form-control bg-light" readonly>
+                        </div>
+                        <div class="col-sm-6">
+                            <label asp-for="Friend.Address.ZipCode" class="form-label fw-semibold"></label>
+                            <input asp-for="Friend.Address.ZipCode" class="form-control bg-light" readonly>
+                        </div>
+                        <div class="col-sm-6">
+                            <label asp-for="Friend.Address.Country" class="form-label fw-semibold"></label>
+                            <input asp-for="Friend.Address.Country" class="form-control bg-light" readonly>
+                        </div>
+                        <div class="col-sm-12">
+                            <a asp-page="./FriendDetails" asp-route-id="@Model.Friend.FriendId" asp-route-editAddress="true"
+                                class="btn btn-primary btn-sm mt-2">
+                                <svg class="bi me-1" width="0.9em" height="0.9em" fill="white">
+                                    <use xlink:href="#edit" />
+                                </svg>
+                                Edit Address
+                            </a>
+                        </div>
+                    </div>
+                }
+                @if (Model.EditAddress)
+                {
+                    <form method="post" asp-page-handler="Edit">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="AddressIM.StreetAddress" class="form-label"></label>
+                                <input asp-for="AddressIM.StreetAddress" class="form-control">
+                                <span asp-validation-for="AddressIM.StreetAddress" class="text-danger"></span>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="AddressIM.City" class="form-label"></label>
+                                <input asp-for="AddressIM.City" class="form-control">
+                                <span asp-validation-for="AddressIM.City" class="text-danger"></span>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="AddressIM.ZipCode" class="form-label"></label>
+                                <input asp-for="AddressIM.ZipCode" class="form-control">
+                                <span asp-validation-for="AddressIM.ZipCode" class="text-danger"></span>
+
+                            </div>
+                            <div class="col-sm-6">
+                                <label asp-for="AddressIM.Country" class="form-label"></label>
+                                <input asp-for="AddressIM.Country" class="form-control">
+                                <span asp-validation-for="AddressIM.Country" class="text-danger"></span>
+
+                            </div>
+                            <input type="hidden" asp-for="AddressIM.AddressId" />
+                            <input type="hidden" asp-for="AddressIM.FriendId" />
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-success btn-sm mt-2">
+                                    <svg class="bi me-1" width="0.9em" height="0.9em" fill="white">
+                                        <use xlink:href="#save" />
+                                    </svg>
+                                    Save Changes
+                                </button>
+                                <a class="btn btn-outline-secondary btn-sm ms-2 mt-2" asp-page="./FriendDetails"
+                                    asp-route-id="@Model.Friend.FriendId">
+                                    <svg class="bi me-1" width="0.9em" height="0.9em">
+                                        <use xlink:href="#undo" />
+                                    </svg>
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+
+        @if (Model.Friend.Pets != null)
+        {
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h4 class="mb-0 fw-bold text-white">
+                        <svg class="heart-fill" width="1.5em" height="1.5em" fill="white">
+                            <use xlink:href="#heart-fill" />
+                        </svg>
+                        Pets
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+
+                        @foreach (var pet in Model.Friend.Pets)
+                        {
+                            <div class="col-sm-6">
+                                <label for="petName-@pet.PetId" class="form-label fw-semibold">Name</label>
+                                <input type="text" class="form-control bg-light" id="petName-@pet.PetId" value="@pet.Name" readonly>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="petKind-@pet.PetId" class="form-label fw-semibold">Kind</label>
+                                <input type="text" class="form-control bg-light" id="petKind-@pet.PetId" value="@pet.Kind" readonly>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <form method="post" class="d-inline">
+                                    <input type="hidden" name="friendId" value="@Model.Friend.FriendId" />
+                                    <input type="hidden" name="petId" value="@pet.PetId" />
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal@(pet.PetId)">
+                                        <svg class="bi me-1" width="0.9em" height="0.9em" fill="white">
+                                            <use xlink:href="#undo" />
+                                        </svg>
+                                        Delete Pet
+                                    </button>
+
+                                    <div class="modal fade" id="deleteModal@(pet.PetId)" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-danger">Confirm deletion</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    You are about to delete @pet.Name. the @pet.Kind Are you sure?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">No</button>
+                                                    <button type="submit" asp-page-handler="Delete"
+                                                        class="btn btn-danger">Yes</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body text-center py-4">
+                    <svg class="bi text-muted mb-3" width="3em" height="3em">
+                        <use xlink:href="#boombox" />
+                    </svg>
+                    <p class="text-muted mb-0">This friend has no pets.</p>
+                </div>
+            </div>
+        }
+        @if (Model.Friend.Quotes != null)
+        {
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h4 class="mb-0 fw-bold text-white">
+                        <svg class="bi bi-chat-fill" width="1.5em" height="1.5em" fill="white">
+                            <use xlink:href="#chat-fill" />
+                        </svg>
+                        Favorite Quotes
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+
+                        @foreach (var quote in Model.Friend.Quotes)
+                        {
+                            <div class="col-sm-6">
+                                <label for="quoteText-@quote.QuoteId" class="form-label fw-semibold">Quote</label>
+                                <input type="text" class="form-control bg-light" id="quoteText-@quote.QuoteId"
+                                    value="@quote.QuoteText" readonly>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label for="quoteAuthor-@quote.QuoteId" class="form-label fw-semibold">Author</label>
+                                <input type="text" class="form-control bg-light" id="quoteAuthor-@quote.QuoteId"
+                                    value="@quote.Author" readonly>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <form method="post" class="d-inline">
+                                    <input type="hidden" name="friendId" value="@Model.Friend.FriendId" />
+                                    <input type="hidden" name="quoteId" value="@quote.QuoteId" />
+                                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModalQuote@(quote.QuoteId)">
+                                        <svg class="bi me-1" width="0.9em" height="0.9em" fill="white">
+                                            <use xlink:href="#undo" />
+                                        </svg>
+                                        Delete Quote
+                                    </button>
+
+                                    <div class="modal fade" id="deleteModalQuote@(quote.QuoteId)" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-danger">Confirm deletion</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    You are about to delete a quote by @quote.Author. Are you sure?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">No</button>
+                                                    <button type="submit" asp-page-handler="Delete"
+                                                        class="btn btn-danger">Yes</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body text-center py-4">
+                    <svg class="bi text-muted mb-3" width="3em" height="3em">
+                        <use xlink:href="#artist" />
+                    </svg>
+                    <p class="text-muted mb-0">This friend has no quotes.</p>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <h4>FRIEND NOT FOUND </h4>
+}

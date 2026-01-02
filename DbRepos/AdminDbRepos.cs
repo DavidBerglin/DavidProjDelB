@@ -151,7 +151,7 @@ public class AdminDbRepos
             GstUsrInfoDbDto result_set = null;
             if (reader.HasRows)
             {
-                // Read the first result set which should be InfoDbView
+                // Read the first result set which should be InfoDbVie
                 await reader.ReadAsync();
 
                 result_set = new GstUsrInfoDbDto

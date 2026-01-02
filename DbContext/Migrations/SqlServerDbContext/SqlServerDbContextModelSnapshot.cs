@@ -205,6 +205,9 @@ namespace DbContext.Migrations.SqlServerDbContext
                     b.Property<int>("NrFriends")
                         .HasColumnType("int");
 
+                    b.Property<int>("NrPets")
+                        .HasColumnType("int");
+
                     b.ToTable((string)null);
 
                     b.ToView("vwInfoFriends", "gstusr");

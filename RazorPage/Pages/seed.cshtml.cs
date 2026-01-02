@@ -1,25 +1,34 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Seido.Utilities.SeedGenerator;
+using Services.Interfaces;
 
 namespace RazorPage.Pages;
 
 public class SeedModel : PageModel
 {
     private readonly ILogger<PrivacyModel> _logger;
-    private readonly SeedGenerator _seeder;
-    public string FirstName {get;set;}
+    readonly IAdminService _adminService;
+    [BindProperty]
+    public int NrOfItemsToSeed {get;set; } = 100;
     
 
-    public SeedModel(ILogger<PrivacyModel> logger, SeedGenerator seeder)
+    public SeedModel(ILogger<PrivacyModel> logger, IAdminService adminService)
     {
         _logger = logger;
-        _seeder = seeder;
+        _adminService = adminService;
     }
 
-    public void OnGet()
+    public IActionResult OnGet()
     {
-        FirstName = _seeder.FirstName;
+        return Page();
+    }
+
+    public async Task <IActionResult> OnPost()
+    {
+        await _adminService.RemoveSeedAsync(true);
+        await _adminService.SeedAsync(NrOfItemsToSeed);
+        return Page();
     }
 }
 

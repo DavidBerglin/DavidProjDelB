@@ -1,10 +1,28 @@
 @page
 @model SeedModel
 @{
-    ViewData["Title"] = "Seeding page";
+    ViewData["Title"] = "Page for seeding friends";
 }
 <h1>@ViewData["Title"]</h1>
 
-<p>Page for seeding</p>
-    <p>@Model.FirstName</p>
+        <div class="container px-4 py-4" id="seed">
 
+          <p>Seeding again will remove the old data
+          </p>
+          <div class="row row-cols-1 row-cols-lg-4 align-items-stretch g-4 py-5">
+              <div class="col-md-7 col-lg-8">
+                  <form class="needs-validation" method="post" novalidate>
+                      <div class="row g-3">
+                          <div class="col-sm-6">
+                              <label for="nrItems" class="form-label">Number of items</label>
+                             <input asp-for="NrOfItemsToSeed" type="text" class="form-control is-invalid" id="nrItems" placeholder="" value="100">
+                              <div class="invalid-feedback">
+                                  Please enter a valid number
+                              </div>
+                          </div>
+                      </div>
+                      <button class="w-100 btn btn-primary btn-lg my-4" type="submit">Seed</button>
+                  </form>
+              </div>
+          </div>
+        </div>

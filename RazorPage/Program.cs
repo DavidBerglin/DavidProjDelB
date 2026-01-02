@@ -15,6 +15,7 @@ builder.Services.AddScoped<SeedGenerator>();
 builder.Configuration.AddSecrets(builder.Environment);
 builder.Services.AddEncryptions(builder.Configuration);
 builder.Services.AddDatabaseConnections(builder.Configuration);
+builder.Services.AddEnvironmentInfo();
 builder.Services.AddUserBasedDbContext();
 
 builder.Services.AddScoped<AdminDbRepos>();
